@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+
+        <link rel="stylesheet" href="index.css">
+        <link rel="icon" type="image/x-icon" href="images/logo.ico" />
+        <!--<script src="navbar.js" defer></script>-->
+        <title>N2D Converter</title>
+
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"
+            integrity="sha384-Az5iffn8NAmskvQlnkp9dpt/kJnSH70+GTyg4/0Q44BYJFwDoN/hZoudl0xAQKkb"
+            crossorigin="anonymous"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css"
+            integrity="sha384-DWBy58SIofdQphsInVGgrsjREQqJ7CATor6e+c2IGPqKoHI2GR8sb+vBOX1OucHq"
+            crossorigin="anonymous"
+        />
+
+        <link 
+		rel="stylesheet" 
+		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+		crossorigin="anonymous" 
+	    />
+    </head>
+    <body>
+        <nav class="mynavbar">
+            <div class="brand-logo">
+                <a class="logo">
+                    <img src="images/logo.jpg" alt="N2D Converter" width="90" height="40">
+                </a>
+            </div>
+            <a href="#" class="toggle-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </a>
+            <div class="navbar-links">
+                <ul>
+                    <li><a>N2D: NFA to DFA Converter</a></li>
+                    <li>
+                        <a href="https://github.com/christinapap13/N2D"><strong><i class="mdi mdi-github" aria-hidden="true"></i> Source</strong></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <br />
+
+            <div class="instructions">
+                <h1><strong>Input initial NFA</strong></h1>
+                <ul class="instruction-list">
+                    <li> Define initial state and final states (if any)
+                        <ul class="instructions-list">
+                            <li> More than 1 final states must be delimited by a comma.</li>
+                        </ul>
+                    </li>
+                    <li> Define the alphabet
+                        <ul class="instructions-list">
+                            <li> More than 1 symbols must be delimited by a comma.</li>
+                        </ul>
+                    </li>
+                    <li> Describe NFA transitions
+                        <ul class="instructions-list">
+                            <li>For transitions with multiple symbols, a separate transition per symbol must be described.</li>
+                            <li>ε denotes the empty string.</li>
+                            <li>More than 1 next states must be delimited by a comma.</li>
+                        </ul>
+                    </li>
+                    <li>Inputs are case-sensitive.</li>
+                </ul>
+            </div>
+
+            <div class="main-part">
+                <button type="button" class="btn btn-outline-danger" id="resetBtn" title="Reset the current NFA">Reset</button>
+
+                <form class="form-horizontal align-center" id="nfa" role="form">
+                    <form class="form-horizontal">
+                        <div class="form-group form-inline">
+                            <label for="initialStateInput">Start State:&nbsp;&nbsp;</label>
+                            <input type="text" class="form-control" title = "Initial State" id="initialStateInput" />
+                        </div>
+          
+                        <div class="form-group form-inline">
+                            <label for="finalStatesInput">Final State(s):&nbsp;&nbsp;</label>
+                            <input type="text" class="form-control" title = "Final States" id="finalStatesInput" />
+                        </div>
+
+                        <div class="form-group form-inline">
+                            <label for="alphabetInput">Alphabet:&nbsp;&nbsp;</label>
+                            <input type="text" class="form-control" title="Alphabet" id="alphabet" />
+                        </div>
+                    </form>
+                    <div class="form-inline" id="nfa-transitions">
+                        <div class="production-row" style="display:none">
+                            &delta;(&nbsp;<input type="text" class="form-control current-state-input" title = "Current State"
+                            />&nbsp;,&nbsp;<input type="text" class="form-control input-symbol" title = "Symbol" placeholder="&epsilon;" 
+                            />&nbsp;)&nbsp;=&nbsp;<input type="text" class="form-control next-states" title = "Next State(s)" />
+          
+                            <span class="remove-button mdi-close" title="Remove this transition"></span>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+                <div class="clearfix"></div>
+                <br />
+
+                <div class="col-xs-6 new-production">
+                    <button id="new-transition" type="button" class="btn btn-outline-dark" title="Create a new transition" >
+                        <span class="glyphicon glyphicon-plus"></span> &nbsp;Add a new transition
+                    </button>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="clearfix"></div>
+
+            <div class ="visual">
+                <button type="button" class="btn btn-outline-danger" id="visualization" title="Visualize the FAs"> Visualize</button>
+            </div>
+
+            <p class="tlt">Initial NFA:</p>
+            <span id="current-nfa-status"></span>
+            <div id="current-nfa"></div>
+            <button id="download-nfa" type="button" name="button"><i class="fa fa-download"></i>&emsp;Download NFA</button> <!-- style ="display: none"-->
+
+            <div class="clearfix"></div>
+            <p class="tlt">Equivalent DFA:</p>
+            <div class="row">
+                <div class="col-lg">
+                    <span id="current-dfa-status"></span>
+                    <div id="current-dfa"></div>		  
+                    <button id="download-current-dfa" type="button" name="button" ><i class="fa fa-download"></i>&emsp;Download DFA</button>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <span id="show-details-status"></span>
+            <div id="details"></div>
+            <br />
+	        <button class="next" id="Next" type="button" name="button" style ="display: none" ><span>Next </span></button>
+            <button class="previous" id="Previous" type="button" name="button" style ="display: none"><span> Previous</span></button>
+            <button id="show-details" type="button" name="button">Show detailed process</button>
+            <br />
+            <br />
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script
+            src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha384-i61gTtaoovXtAbKjo903+O55Jkn2+RtzHtvNez+yI49HAASvznhe9sZyjaSHTau9"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"
+        ></script>
+        <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+        <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"
+        ></script>
+        <script 
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js" 
+            integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg==" 
+            crossorigin="anonymous" 
+            referrerpolicy="no-referrer">
+        </script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script
+            src="https://unpkg.com/viz.js@1.8.1/viz.js"
+            type="javascript/worker"
+        ></script>
+        <script src="https://unpkg.com/d3-graphviz@2.6.1/build/d3-graphviz.js"></script>
+
+        <!--<script src="html2canvas.js"></script>-->
+        <script 
+            src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" 
+            integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" 
+            crossorigin="anonymous">
+        </script>
+
+        <script src="definitions.js"></script>
+
+        <script src="functionality.js"></script>
+    </body>
+</html>

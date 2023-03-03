@@ -1,0 +1,342 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/*CSS for our nav menu!*/
+.mynavbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #185ca1 !important;
+    color: white;
+}
+
+.brand-logo {
+   /* height: 1%;
+    width: 5%;*/
+    margin: .25rem;
+}
+
+.navbar-links ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-links li {
+    list-style: none;
+}
+
+.navbar-links li a {
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    display: block;
+    font-size: 1.2rem;
+}
+
+.navbar-links li:hover {
+    background-color: cornflowerblue;
+}
+
+.toggle-button {
+    position: absolute;
+    top: 1.3rem;
+    right: 1rem;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 25px;
+}
+
+.toggle-button .bar {
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .toggle-button {
+        display: flex;
+    }
+
+    .navbar-links {
+       display: none;
+       width: 100%;
+    }
+
+    .mynavbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-links ul {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .navbar-links li {
+        text-align: center;
+    }
+
+    .navbar-links li a {
+        padding: .5rem 1rem;
+    }
+
+    .navbar-links.active {
+        display: flex;
+    }
+}
+/*--------------------------------------*/
+
+/*CSS for the rest of the page*/
+
+.container {
+    align-items: center;
+}
+
+.instructions h1 {
+    font-size: 140%;
+    margin-top: -20px;
+    text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+    .instructions h1 {
+        font-size: 125%;
+        margin-top: -10px;
+    }
+}
+
+.instructions {
+    align-items: center;
+    padding: 3%;
+    margin: 1% 10%;
+    font-size: 110%;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+}
+
+@media screen and (max-width: 600px) {
+    .instructions  {
+        font-size: 100%;
+        margin-top: -10px;
+    }
+}
+
+.instruction-list {
+    list-style-type: circle;
+    margin-left: 1rem;
+}
+
+.instructions-list {
+    list-style-type: disc;
+    margin-left: 1rem;
+}
+
+.main-part {
+    align-items: center;
+    text-align: center;
+}
+
+#resetBtn {
+    font-size: 120%;
+    margin: 10px 0px;
+}
+
+span.remove-button {
+    margin-left: 5px;
+}
+
+.mdi-close::before {
+    content: "\2716" !important;
+}
+
+span.remove-button:hover {
+    background: #ffffff;
+    border-radius: 10px;
+    color: #aaaaaa;
+    cursor: pointer;
+    content: "\2716";
+}
+
+.form-horizontal {
+    font-size: 105%;
+}
+
+#nfa {
+    margin-top: 10px;
+    padding: 10px 0px;
+  }
+
+.form-inline {
+    text-align: center;
+    align-items: center;
+}
+
+.production-row {
+    margin: 5px 17px;
+    min-height: 34px;
+    font-size: larger;
+}
+
+.production-row input {
+    max-width: 100px;
+}
+
+.col-xs-nt,
+.col-xs-pr {
+  min-height: 1px;
+  padding-right: 10px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.col-xs-nt {
+  float: left;
+  min-width: 60px;
+  width: 5.5%;
+}
+
+.col-xs-pr {
+  float: left;
+  min-width: 100px;
+  width: 9%;
+}
+
+div.arrow,
+div.or,
+div.remove {
+  display: inline-block;
+  float: left;
+  font-size: 20px;
+  height: 34px;
+  line-height: 34px;
+  vertical-align: middle;
+}
+
+#new-transition {
+    font-size: 110%;
+}
+
+div.visual {
+    text-align: center;
+    margin-top: -30px;
+}
+
+#visualization {
+    font-size: 110%;
+    text-align: center;
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid #4CAF50;
+    color: black;
+}
+
+#visualization:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.tlt {
+    text-align: center;
+    font-size: 150%;
+}
+
+#current-nfa, #current-dfa, #details {
+	width: 100%;
+	overflow-y: auto;
+}
+
+#download-nfa, #download-current-dfa, #show-details {
+	background-color: white;
+	border-radius: 12px;
+	border: 1px solid black;
+	color: black;
+	padding: 5px 15px;
+	cursor: pointer;
+	font-size: 13px;
+}
+
+#download-nfa:hover, #download-current-dfa:hover, #show-details:hover {
+	background-color: black;
+	color: white;
+}
+
+.next, .previous {
+	background-color: white;
+	border-radius: 12px;
+	border: 1px solid black;
+	color: grey;
+	text-align: center;
+	padding: 5px 10px;
+	transition: all pointer;
+	cursor: pointer;
+	font-size: 15px;
+	width: 100px;
+}
+
+.next span, .previous span {
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	transition: 0.5s;
+}
+
+.next span:after {
+	content: '\00bb';
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	right: -20px;
+	transition: 0.5s; 
+}
+
+.previous span::after {
+    content: '\00ab';
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: -20px;
+	transition: 0.5s;
+}
+
+.next:hover span {
+	padding-right: 25px;
+}
+
+.previous:hover span {
+    padding-left: 25px;
+}
+
+.next:hover span:after {
+	opacity: 1;
+	right: 0;
+}
+
+.previous:hover span:after {
+    opacity: 1;
+    left: 0;
+}
+
+.next:hover, .previous:hover {
+	background-color:grey;
+	color: white;
+}
+
+@media screen and (max-width: 600px) {
+    .production-row input {
+        max-width: 60px;
+        display: inline;
+    }
+}
+
+#details {
+    margin-top: 10px;
+}
