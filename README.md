@@ -1,5 +1,5 @@
 <p align="center">
-  ![logo1](https://user-images.githubusercontent.com/80216595/222827115-c2cc33d8-4353-409c-80a3-8453123e4dda.jpg)
+  <img src="https://user-images.githubusercontent.com/80216595/222827115-c2cc33d8-4353-409c-80a3-8453123e4dda.jpg">
 </p>
 
 # N2D-NFA-to-DFA-Converter
