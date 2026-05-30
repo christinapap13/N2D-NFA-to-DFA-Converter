@@ -1,14 +1,10 @@
-const DEBUG = false;
-let transitionMap = {};
-const unique = arr => [...new Set(arr)];
-
 class Transition {
   constructor(state, nextStates, symbol) {
     if (!(typeof state === "string" || state instanceof String))
       throw new Error("Expected a single state (string)");
 
     if (!Array.isArray(nextStates)) {
-      if (DEBUG) console.warn("Expected nextStates in transition to be an array");
+      console.warn("Expected nextStates in transition to be an array");
       let arr = [];
       arr.push(nextStates.toString());
       nextStates = arr;
@@ -29,21 +25,21 @@ class NFA {
       throw new Error("Expected a single initial state (string)");
 
     if (!Array.isArray(finalStates)) {
-      if (DEBUG) console.warn("Expected finalStates in NFA to be an array");
+      console.warn("Expected finalStates in NFA to be an array");
       let arr = [];
       arr.push(finalStates.toString());
       finalStates = arr;
     }
 
     if (!Array.isArray(alphabet)) {
-      if (DEBUG) console.warn("Expected alphabet in NFA to be an array");
+      console.warn("Expected alphabet in NFA to be an array");
       let arr = [];
       arr.push(alphabet.toString());
       alphabet = arr;
     }
 
     if (!Array.isArray(transitions)) {
-      if (DEBUG) console.warn("Expected transitions in NFA to be an array");
+      console.warn("Expected transitions in NFA to be an array");
       let arr = [];
       arr.push(transitions);
       transitions = arr;
@@ -58,34 +54,41 @@ class NFA {
     this.transitions = transitions;
   }
 
-	toDotString() {
-		const lines = [];
-		lines.push("digraph fsm {");
-		lines.push("rankdir=LR;");
-		lines.push('size="8,5";');
-		lines.push("fake [style = invisible];");
+  toDotString() {
+    let dotStr = " digraph fsm { \n";
+    dotStr += " rankdir=LR; \n";
+    dotStr += ' size="8,5"; \n';
+    dotStr += " fake [style = invisible]; \n";
 
-		if (!this.finalStates.includes(this.formatDotState(this.initialState))) {
-			lines.push("node [shape = doublecircle]; " + this.finalStates.join(" ,"));
-			lines.push("node [shape = circle];");
-		} else {
-			lines.push("node [shape = doublecircle]; " + this.formatDotState(this.initialState));
-			lines.push("node [shape = doublecircle]; " + this.finalStates.join(" ,"));
-			lines.push("node [shape = circle];");
-		}
+    if (!this.finalStates.includes(this.formatDotState(this.initialState))){
+      dotStr += " node [shape = doublecircle]; " + this.finalStates.join(" ,") + " \n";
+      dotStr += " node [shape = circle];\n";
+    } else {
+      dotStr += " node [shape = doublecircle]; " + this.formatDotState(this.initialState) + " \n";
+      dotStr += " node [shape = doublecircle]; " + this.finalStates.join(" ,") + " \n";
+      dotStr += " node [shape = circle];\n";
+    }
+    dotStr += " fake -> " + this.formatDotState(this.initialState) + " \n";
 
-		lines.push("fake -> " + this.formatDotState(this.initialState));
+    if(this.transitions.length) {
+      for (let i = 0; i < this.transitions.length; i++) {
+        let t = this.transitions[i];
 
-		for (let t of this.transitions) {
-			lines.push(
-				`${this.formatDotState(t.state)} -> ${this.formatDotState(t.nextStates)} [label=${t.symbol}]`
-			);
-		}
+        dotStr +=
+          " " +
+          this.formatDotState(t.state) +
+          " -> " +
+          this.formatDotState(t.nextStates) +
+          " [label= " +
+          t.symbol +
+          "] \n";
+      }
+    }
 
-		lines.push("}");
-		return lines.join("\n");
-	}
+    dotStr += " }";
 
+    return dotStr;
+  }
 
   formatDotState(state_str) {
     state_str = state_str.toString();
@@ -99,12 +102,7 @@ class NFA {
 }
 
 //To find the E{qi} of each state!
-const eClosureCache = {};
-
 function eClosureOfState (state, transitions) {
-	if (eClosureCache[state]) return eClosureCache[state];
-
-
 	if (!(typeof state === "string" || state instanceof String))
 		throw new Error("Expected a single state input as a string");
 
@@ -144,8 +142,6 @@ function eClosureOfState (state, transitions) {
 			}
 		}
 	}
-	eClosureCache[state] = e_closure;
-
 	return e_closure;
 }
 
@@ -166,19 +162,6 @@ function generateDFA(nfa, step_counter_stop = -1) {
 	
 	// If we don't have epsilon transitions, don't do anything to it
 	//if (!hasEpsilon) return nfa;
-
-	// findNextStates does O(n) search for each state and symbol, so we create a map to make it O(1)
-	transitionMap = {}; // reset global map
-
-	for (let t of nfa.transitions) {
-		if (!transitionMap[t.state]) transitionMap[t.state] = {};
-		if (!transitionMap[t.state][t.symbol]) transitionMap[t.state][t.symbol] = [];
-		transitionMap[t.state][t.symbol].push(...t.nextStates);
-	}
-
-
-
-
 	
 	let state = nfa.initialState;
 	let initial_closure = eClosureOfState(state, nfa.transitions); 
@@ -222,7 +205,7 @@ function generateDFA(nfa, step_counter_stop = -1) {
 		} else {
 			state = state.split(","); 
 		}
-		if (DEBUG) console.log(state);	
+		console.log(state);	
 		
 		for (j=0; j<nfa.alphabet.length; j++) { //We see where we are going with each symbol for each state in the state ([q0,q1,q2,q3]).
 			let next_states_union = []; //where we are going with the symbol we choose.
@@ -234,18 +217,17 @@ function generateDFA(nfa, step_counter_stop = -1) {
 				for(let k=0; k<ns.length; k++) 
 					if(!next_states_union.includes(ns[k])) next_states_union.push(ns[k]);
 			}
-			if (DEBUG) console.log(next_states_union);
+			console.log(next_states_union);
 			
 			if (next_states_union.length>0) { // if we have next states we are findind the E{q} of them, we add a new transition, a new state if need.				
 				for (let p=0; p<next_states_union.length; p++){
 					to_state = to_state.concat(eClosureOfState(next_states_union[p], nfa.transitions));
 				}
-				//to_state = [...new Set(to_state)];
-				to_state = unique(to_state);
+				to_state = [...new Set(to_state)];
 				to_state = to_state.sort().join(); // we combine the states (q1,q2 = q1q2)
 				
 				dfa_transitions.push (new Transition(state.join(), to_state, nfa.alphabet[j]));
-				if (DEBUG) console.log(dfa_transitions);
+				console.log(dfa_transitions);
 				
 				// We add if needed the stateto our dfa_states
 				if (!dfa_states.includes(to_state)){
@@ -261,10 +243,9 @@ function generateDFA(nfa, step_counter_stop = -1) {
 						dfa_final_states.push(to_state.join());
 					}
 				}
-				//dfa_final_states = [...new Set(dfa_final_states)]; // We remove the duplicates
-				dfa_final_states = unique(dfa_final_states);
+				dfa_final_states = [...new Set(dfa_final_states)]; // We remove the duplicates
 			} else {
-				if (DEBUG) console.log("TRAP state needed");
+				console.log("TRAP state needed");
 				
 				if(!dfa_states.includes("TRAP")) {
 					for (let z=0; z<nfa.alphabet.length; z++) {
@@ -278,22 +259,35 @@ function generateDFA(nfa, step_counter_stop = -1) {
 			}						
 		}
 	}
-	//dfa_states = [...new Set(dfa_states)];
-	dfa_states = unique(dfa_states);
+	dfa_states = [...new Set(dfa_states)];
 	
 	for (let l=0; l<dfa_final_states.length; l++) {
 		dfa_final_states[l] = dfa_final_states[l].replaceAll(",","");
 	}
 	
-	if (DEBUG) console.log(dfa_initialState);
-	if (DEBUG) console.log(dfa_final_states);
-	if (DEBUG) console.log(dfa_states);
-	if (DEBUG) console.log(dfa_transitions);
+	console.log(dfa_initialState);
+	console.log(dfa_final_states);
+	console.log(dfa_states);
+	console.log(dfa_transitions);
 	
 	return new NFA (dfa_initialState, dfa_final_states, dfa_states, nfa.alphabet, dfa_transitions);
 }
 
 //To find the next states of a given state with a specific symbol
-function findNextStates(state, symbol) {
-    return transitionMap[state]?.[symbol] || [];
+function findNextStates (state, symbol, transitions) {
+	let next_states = [];
+	
+	for (let i=0; i<transitions.length; i++) {
+		let t = transitions[i];
+		
+		if(t.state === state && t.symbol === symbol){
+			for (let j=0; j<t.nextStates.length; j++) {
+				if(!next_states.includes(t.nextStates[j])) {
+					next_states.push(t.nextStates[j]);
+				}
+			}
+		}
+	}
+
+	return next_states;
 }
